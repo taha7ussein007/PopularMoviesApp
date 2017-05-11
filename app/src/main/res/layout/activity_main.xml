@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFF0"
+    tools:context="MainActivity">
+
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/main"
+        android:name="com.example.tahahussein007.popularmoviesapp.Main_Fragment"
+        tools:layout="@layout/fragment_main_" />
+
+
+</FrameLayout>
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--xmlns:tools="http://schemas.android.com/tools"-->
+    <!--android:id="@+id/main_activity"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--tools:context="MainActivity">-->
+
+    <!--<fragment-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:id="@+id/main"-->
+    <!--android:name="com.example.tahahussein007.popularmoviesapp.Main_Fragment"-->
+    <!--tools:layout="@layout/fragment_main_" />-->
+
+    <!--</FrameLayout>-->
+
+
+<!--<android.support.v7.widget.RecyclerView-->
+<!--xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--android:layout_width="match_parent"-->
+<!--android:layout_height="match_parent"-->
+<!--android:id="@+id/recycleView"-->
+<!--android:background="@color/viewBg"-->
+    <!--&gt;-->
+
+<!--</android.support.v7.widget.RecyclerView>-->

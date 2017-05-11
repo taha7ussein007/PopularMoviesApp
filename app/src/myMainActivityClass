@@ -1,0 +1,239 @@
+package com.example.tahahussein007.popularmoviesapp;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.ButtonBarLayout;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.tahahussein007.popularmoviesapp.Models.MovieMODEL;
+import com.google.gson.Gson;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.BufferedReader;
+import java.io.Console;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import static android.R.attr.x;
+import static com.example.tahahussein007.popularmoviesapp.R.layout.movie_details;
+import static com.example.tahahussein007.popularmoviesapp.R.layout.movie_in_list;
+
+public class MainActivity extends AppCompatActivity {
+
+    private final String MOVIES_URL = "https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=858a0b80b5b758a974600daa98070f2c&page=1";
+    private final String POPULARITY = "popularity.desc";
+    private final String API_KEY = "858a0b80b5b758a974600daa98070f2c";
+
+    private ProgressDialog dialog;
+    private RecyclerView recyclerView_movies ;
+    private RecyclerViewAdapter adapter;
+
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+       // getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        RelativeLayout main_activity = (RelativeLayout)findViewById(R.id.activity_main);
+//        recyclerView_movies.setLayoutManager(new LinearLayoutManager(this));
+
+        dialog = new ProgressDialog(this);
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading. Please wait...");
+        // Create default options which will be used for every
+        //  displayImage(...) call if no options will be passed to this method
+        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getApplicationContext())
+                .defaultDisplayImageOptions(defaultOptions)
+                .build();
+        ImageLoader.getInstance().init(config); // Do it on Application start
+
+
+        recyclerView_movies = (RecyclerView)main_activity.findViewById(R.id.recycleView);
+
+        new JSONTask().execute(MOVIES_URL);
+    }
+
+    public class JSONTask extends AsyncTask<String ,Void, List<MovieMODEL> > {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.show();
+        }
+
+        @Override
+        protected List<MovieMODEL> doInBackground(String... params) {
+
+            List<MovieMODEL> movieModelList = new ArrayList<>();
+
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+
+
+            try {
+                URL url = new URL(MOVIES_URL);
+                connection = (HttpURLConnection) url.openConnection();
+                InputStreamReader stream = new InputStreamReader(connection.getInputStream());
+                reader = new BufferedReader(stream);
+
+                final StringBuilder txtBuilder = new StringBuilder();
+                String line;
+                String result;
+
+                while ((line=reader.readLine()) != null){
+                    txtBuilder.append(line);
+                }
+
+                result = txtBuilder.toString();
+
+                JSONObject  object;
+
+                try {
+                    object = new JSONObject(result);
+                    JSONArray array = object.getJSONArray("results");
+
+
+                    for(int i=0; i<array.length(); i++){
+
+                        JSONObject finalObject = array.getJSONObject(i);
+
+                        String title = finalObject.getString("original_title");
+                        String image = finalObject.getString("poster_path");
+                        String overview = finalObject.getString("overview");
+                        String date = finalObject.getString("release_date");
+                        float vote = (float)finalObject.getDouble("vote_average");
+                        String backImage = finalObject.getString("backdrop_path");
+                        int id = (int)finalObject.getInt("id");
+
+                        MovieMODEL movieModel = new MovieMODEL(image,backImage,overview,title,id,date,vote);
+
+                           // System.out.println(movieModel.getTitle());
+
+                        movieModelList.add(movieModel);
+                    }
+
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+
+                if (connection != null)
+                    connection.disconnect();
+
+                try {
+                    if (reader != null)
+                        reader.close();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+
+            return movieModelList;
+        }
+
+        @Override
+        protected void onPostExecute(final List<MovieMODEL> result ) {
+            super.onPostExecute(result);
+            dialog.dismiss();
+
+
+            if(null != result && !result.isEmpty()) {
+                adapter = new RecyclerViewAdapter(getApplicationContext(), result);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                recyclerView_movies.setLayoutManager(mLayoutManager);
+                recyclerView_movies.setItemAnimator(new DefaultItemAnimator());
+                recyclerView_movies.setAdapter(adapter);
+
+
+
+            } else {
+                Toast.makeText(getApplicationContext(), "Not able to fetch data from server, please check url.", Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+    }
+
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+      //  getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    /*@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_refresh) {
+            new JSONTask().execute(URL_TO_HIT);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    }
+    */
+
+
+
+
+}
+
