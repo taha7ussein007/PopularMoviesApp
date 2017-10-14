@@ -10,4 +10,25 @@ This is the second project in Udacity's Android Developer Nanodegree. The purpos
   -	Read reviews from other users
   -	Material design
   -	UI optimized for phone and tablet
+  
+  # Screen Shots (Tablet)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/1.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/2.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/3.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/4.JPG)
+  
+  # Screen Shots (Mobile)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/5.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/6.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/7.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/8.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/9.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/10.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/11.JPG)
+  ![alt text](https://github.com/taha7ussein007/PopularMoviesApp/blob/master/scrShots/12.JPG)
+
+
+
+
+
 
